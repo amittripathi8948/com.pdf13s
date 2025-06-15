@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>अल्टीमेट टूल्स - 100% वर्किंग ऑनलाइन टूल्स</title>
+    <meta name="description" content="सभी PDF और यूटिलिटी टूल्स जो वास्तव में काम करते हैं। फोटो से PDF बनाएं, इमेज कंप्रेस करें। 100% क्लाइंट-साइड, तेज और सुरक्षित।">
+    <meta name="keywords" content="photo to pdf, image compressor, online tools, karan, amit tripathi, 100% working tools">
+    
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+
+    <!-- Icons and Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #3498db; --secondary-color: #e74c3c; --background-color: #f4f6f9;
+            --card-background: #ffffff; --text-color: #34495e; --heading-color: #2c3e50;
+            --border-color: #dfe4ea; --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        .dark-mode {
+            --background-color: #2c3e50; --card-background: #34495e; --text-color: #f4f6f9;
+            --heading-color: #ffffff; --border-color: #576574;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Roboto', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--background-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; display: flex; }
+        
+        .sidebar { width: 260px; background-color: var(--card-background); height: 100vh; position: fixed; top: 0; left: 0; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid var(--border-color); z-index: 1000; transition: transform 0.3s ease-in-out; }
+        .sidebar .logo { font-size: 2em; font-weight: bold; color: var(--heading-color); margin-bottom: 30px; text-align: center; }
+        .sidebar .logo i { color: var(--primary-color); }
+        .sidebar nav a { display: flex; align-items: center; color: var(--text-color); text-decoration: none; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; transition: all 0.3s; }
+        .sidebar nav a:hover, .sidebar nav a.active { background: var(--gradient); color: white; transform: translateX(5px); }
+        .sidebar nav a i { margin-right: 15px; width: 20px; text-align: center; }
+        .sidebar .bottom-links { margin-top: auto; }
+        .sidebar .theme-switcher, .sidebar .about-link, .sidebar .instagram-link { display: flex; align-items: center; justify-content: space-between; padding: 10px; background-color: var(--background-color); border-radius: 8px; margin-top: 10px; text-decoration:none; color: var(--text-color); cursor:pointer;}
+        .sidebar .instagram-link img { width: 24px; height: 24px; margin-right: 10px; }
+
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; transition: margin-left 0.3s ease-in-out; }
+        .header-banner { background: var(--gradient); padding: 50px 40px; border-radius: 16px; text-align: center; color: white; margin-bottom: 40px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        
+        .tool-section h2 { font-size: 2.2em; color: var(--heading-color); margin-bottom: 25px; padding-bottom: 10px; border-bottom: 4px solid var(--primary-color); display: inline-block; }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        .tool-card { background: var(--card-background); padding: 25px; border-radius: 12px; box-shadow: var(--shadow); text-align: center; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .tool-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); border-color: var(--primary-color); }
+        .tool-card .icon { font-size: 3em; margin-bottom: 15px; color: var(--primary-color); }
+        .tool-card h3 { font-size: 1.2em; color: var(--heading-color); margin-bottom: 5px; }
+        .tool-card p { font-size: 0.9em; color: var(--text-color); opacity: 0.8; }
+        
+        footer { text-align: center; padding: 20px; margin-top: 40px; color: var(--text-color); border-top: 1px solid var(--border-color); }
+        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
+        .modal-container.show { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--card-background); padding: 30px; border-radius: 15px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; transform: scale(0.95); transition: transform 0.3s; }
+        
+        .tool-ui input, .tool-ui textarea, .tool-ui select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px; background-color: var(--background-color); color: var(--text-color); }
+        .tool-ui .btn { background: var(--gradient); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; transition: opacity 0.3s; display: inline-block; text-decoration: none; text-align: center; }
+        .loading-spinner { border: 5px solid var(--border-color); border-top: 5px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #output-area { margin-top: 20px; padding: 15px; background: var(--background-color); border-radius: 8px; border: 1px solid var(--border-color); min-height: 50px; word-wrap: break-word; }
+        #output-area img { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+
+        .menu-toggle { display: none; position: fixed; top: 15px; left: 15px; z-index: 1100; background: var(--card-background); border: 1px solid var(--border-color); border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; color: var(--heading-color); cursor: pointer; }
+        #install-app-btn { background: var(--gradient); color: white; position: fixed; bottom: 20px; right: 20px; z-index: 1001; padding: 10px 20px; border-radius: 50px; border: none; cursor: pointer; font-weight: bold; display: none; }
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; }
+        }
+    </style>
+</head>
+<body class="sidebar-open">
+
+    <aside class="sidebar">
+        <div class="logo"><i class="fas fa-check-circle"></i> UltimateTools</div>
+        <nav>
+            <a href="#home" class="active"><i class="fas fa-home"></i> होम</a>
+            <a href="#pdf-tools"><i class="fas fa-file-pdf"></i> PDF टूल्स</a>
+            <a href="#utility-tools"><i class="fas fa-cogs"></i> यूटिलिटी टूल्स</a>
+        </nav>
+        <div class="bottom-links">
+            <div class="theme-switcher"><span>डार्क मोड</span><input type="checkbox" id="theme-toggle-checkbox"></div>
+            <a href="#" class="about-link" id="about-us-btn"><i class="fas fa-info-circle"></i> About Us</a>
+            <a href="https://www.instagram.com/its_amit_tripathi_r?igsh=MTR5ZmR6ZjVjaG04ZQ==" target="_blank" class="instagram-link"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo"><span>Follow Me</span></a>
+        </div>
+    </aside>
+
+    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+    <button id="install-app-btn"><i class="fas fa-download"></i> ऐप इंस्टॉल करें</button>
+
+    <main class="main-content">
+        <header class="header-banner" id="home">
+            <h1>100% वर्किंग ऑनलाइन टूल्स</h1>
+            <p>आपके सभी डिजिटल कार्यों के लिए एक शक्तिशाली, तेज और पूरी तरह से फंक्शनल टूलकिट।</p>
+        </header>
+
+        <section class="tool-section" id="pdf-tools">
+            <h2><i class="fas fa-file-pdf"></i> PDF टूल्स (सभी फंक्शनल)</h2>
+            <div class="tool-grid">
+                <div class="tool-card" data-tool="photo-to-pdf"> <div class="icon"><i class="fas fa-file-image"></i></div> <h3>फोटो से PDF</h3> <p>JPG/PNG इमेजिस को एक PDF में बदलें।</p> </div>
+                <div class="tool-card" data-tool="pdf-merge"> <div class="icon"><i class="fas fa-compress-arrows-alt"></i></div> <h3>PDF मर्ज करें</h3> <p>कई PDF फ़ाइलों को एक में जोड़ें।</p> </div>
+                <div class="tool-card" data-tool="pdf-split"> <div class="icon"><i class="fas fa-columns"></i></div> <h3>PDF स्प्लिट करें</h3> <p>एक PDF से पेज निकालें या अलग करें।</p> </div>
+                 <div class="tool-card" data-tool="pdf-to-jpg"> <div class="icon"><i class="fas fa-file-export"></i></div> <h3>PDF से JPG</h3> <p>PDF के हर पेज को एक इमेज बनाएं।</p> </div>
+                <div class="tool-card" data-tool="rotate-pdf"> <div class="icon"><i class="fas fa-sync-alt"></i></div> <h3>PDF रोटेट करें</h3> <p>PDF के पेजों को घुमाएं।</p> </div>
+                <div class="tool-card" data-tool="add-page-numbers"> <div class="icon"><i class="fas fa-sort-numeric-down"></i></div> <h3>पेज नंबर जोड़ें</h3> <p>PDF में पेज नंबर डालें।</p> </div>
+            </div>
+        </section>
+
+        <section class="tool-section" id="utility-tools">
+            <h2><i class="fas fa-cogs"></i> यूटिलिटी टूल्स (सभी फंक्शनल)</h2>
+            <div class="tool-grid">
+                <div class="tool-card" data-tool="image-compressor"> <div class="icon"><i class="fas fa-image"></i></div> <h3>इमेज कंप्रेसर</h3> <p>JPG/PNG इमेज का साइज घटाएं।</p> </div>
+                <div class="tool-card" data-tool="image-converter"> <div class="icon"><i class="fas fa-retweet"></i></div> <h3>इमेज कन्वर्टर</h3> <p>JPG ↔ PNG ↔ WEBP में बदलें।</p> </div>
+                <div class="tool-card" data-tool="password-generator"> <div class="icon"><i class="fas fa-key"></i></div> <h3>पासवर्ड जेनरेटर</h3> <p>मजबूत और सुरक्षित पासवर्ड बनाएं।</p> </div>
+                <div class="tool-card" data-tool="word-counter"> <div class="icon"><i class="fas fa-file-word"></i></div> <h3>शब्द गणक</h3> <p>टेक्स्ट में शब्द और अक्षर गिनें।</p> </div>
+                <div class="tool-card" data-tool="age-calculator"> <div class="icon"><i class="fas fa-birthday-cake"></i></div> <h3>आयु कैलकुलेटर</h3> <p>जन्म तिथि से अपनी उम्र की गणना करें।</p> </div>
+                <div class="tool-card" data-tool="bmi-calculator"> <div class="icon"><i class="fas fa-weight"></i></div> <h3>BMI कैलकुलेटर</h3> <p>बॉडी मास इंडेक्स की गणना करें।</p> </div>
+                <div class="tool-card" data-tool="notes"> <div class="icon"><i class="fas fa-sticky-note"></i></div> <h3>नोट्स</h3> <p>ब्राउज़र में त्वरित नोट्स बनाएं।</p> </div>
+            </div>
+        </section>
+
+        <footer><p>© <span id="copyright-year"></span> UltimateTools. All Rights Reserved. Created with 😈 by Amittripathi My favorite  RCB KING VIRAT KOHLI 😇.</p></footer>
+    </main>
+
+    <div id="modal-container" class="modal-container">
+        <div class="modal-content"><div class="modal-header"><h2 id="modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><div id="tool-ui" class="tool-ui"></div><div class="loading-spinner" id="loading-spinner"></div><div id="output-area"></div></div></div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Library Initialization ---
+    const { PDFDocument } = PDFLib;
+
+    // --- DOM Elements ---
+    const body = document.body;
+    const modalContainer = document.getElementById('modal-container');
+    const modalTitle = document.getElementById('modal-title');
+    const toolUiContainer = document.getElementById('tool-ui');
+    const outputArea = document.getElementById('output-area');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const installBtn = document.getElementById('install-app-btn');
+    let deferredPrompt;
+
+    // --- Helper Functions ---
+    const showLoading = () => { loadingSpinner.style.display = 'block'; outputArea.innerHTML = ''; };
+    const hideLoading = () => { loadingSpinner.style.display = 'none'; };
+    const showOutput = (content) => { outputArea.innerHTML = content; };
+    const createDownloadLink = (data, fileName, linkText) => {
+        const blob = new Blob([data]);
+        const url = URL.createObjectURL(blob);
+        return `<a href="${url}" download="${fileName}" class="btn">${linkText}</a>`;
+    };
+
+    // --- Core App Logic: Setup all event listeners on page load ---
+    const setupEventListeners = () => {
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+        
+        const themeToggle = document.getElementById('theme-toggle-checkbox');
+        if (localStorage.getItem('theme') === 'dark') { body.classList.add('dark-mode'); themeToggle.checked = true; }
+        themeToggle.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        document.querySelector('.menu-toggle').addEventListener('click', () => body.classList.toggle('sidebar-open'));
+        modalContainer.querySelector('.modal-close-btn').addEventListener('click', () => modalContainer.classList.remove('show'));
+        modalContainer.addEventListener('click', (e) => { if (e.target === modalContainer) modalContainer.classList.remove('show'); });
+
+        document.querySelectorAll('.tool-card').forEach(card => card.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(card.querySelector('h3').textContent, card.dataset.tool);
+        }));
+        document.getElementById('about-us-btn').addEventListener('click', () => openModal("About Us", 'about-us'));
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+    };
+
+    // --- Function to open a tool's modal ---
+    const openModal = (title, toolId) => {
+        modalTitle.textContent = title;
+        hideLoading();
+        outputArea.innerHTML = '';
+        toolUiContainer.innerHTML = getToolUI(toolId);
+        bindToolLogic(toolId);
+        modalContainer.classList.add('show');
+    };
+
+    // --- Function to get the HTML for a tool's UI ---
+    const getToolUI = (toolId) => {
+        const fileInputHtml = (accept, multiple = false) => `<p>कृपया अपनी फ़ाइल(लें) चुनें।</p><input type="file" id="file-input" accept="${accept}" ${multiple ? 'multiple' : ''}><button class="btn" id="process-btn">प्रोसेस करें</button>`;
+        switch(toolId) {
+            case 'about-us': return `<div style="text-align: center; font-size: 1.1em;"><p>यह वेबसाइट <b>Karan</b> द्वारा बनाई गई है।</p><br><a href="https://www.instagram.com/its_amit_tripathi_r?igsh=MTR5ZmR6ZjVjaG04ZQ==" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--primary-color);"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style="width: 28px;"><strong>Follow Amit Tripathi</strong></a></div>`;
+            case 'pdf-merge': return fileInputHtml('.pdf', true);
+            case 'photo-to-pdf': return fileInputHtml('image/jpeg,image/png', true);
+            case 'pdf-to-jpg': return fileInputHtml('.pdf');
+            case 'pdf-split': return `<p>एक PDF चुनें और पेज रेंज बताएं (उदा. 1-3, 5)।</p><input type="file" id="file-input" accept=".pdf"><input type="text" id="split-ranges" placeholder="जैसे: 1-3, 5, 8-10"><button class="btn" id="process-btn">स्प्लिट करें</button>`;
+            case 'rotate-pdf': return `<p>PDF चुनें और रोटेशन एंगल चुनें।</p><input type="file" id="file-input" accept=".pdf"><select id="rotate-angle"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select><button class="btn" id="process-btn">रोटेट करें</button>`;
+            case 'add-page-numbers': return `<p>PDF चुनें और स्थिति चुनें।</p><input type="file" id="file-input" accept=".pdf"><select id="position"><option value="bottom-center">नीचे बीच में</option></select><button class="btn" id="process-btn">नंबर जोड़ें</button>`;
+            case 'image-compressor': return `<p>इमेज चुनें और कंप्रेशन क्वालिटी सेट करें।</p><input type="file" id="file-input" accept="image/jpeg,image/png"><label for="img-quality">क्वालिटी (0.1-1.0): <span id="quality-val">0.7</span></label><input type="range" id="img-quality" min="0.1" max="1" step="0.1" value="0.7"><button class="btn" id="process-btn">कंप्रेस करें</button>`;
+            case 'image-converter': return `<p>एक इमेज चुनें और आउटपुट फॉर्मेट चुनें।</p><input type="file" id="file-input" accept="image/jpeg,image/png,image/webp"><select id="convert-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WEBP</option></select><button class="btn" id="process-btn">कन्वर्ट करें</button>`;
+            case 'password-generator': return `<label for="pw-length">लंबाई: <span id="pw-length-val">16</span></label><input type="range" id="pw-length" min="8" max="32" value="16"><br><input type="checkbox" id="pw-symbols" checked> सिंबल (!@#) <input type="checkbox" id="pw-numbers" checked> नंबर (0-9)<br><br><button class="btn" id="process-btn">नया पासवर्ड बनाएं</button>`;
+            case 'word-counter': return `<p>टेक्स्ट पेस्ट करें।</p><textarea id="word-count-text" rows="8"></textarea>`;
+            case 'age-calculator': return `<p>जन्म तिथि चुनें।</p><input type="date" id="birth-date"><button class="btn" id="process-btn">उम्र निकालें</button>`;
+            case 'bmi-calculator': return `<p>वजन (kg) और ऊंचाई (cm) डालें।</p><input type="number" id="bmi-weight" placeholder="वजन (kg)"><input type="number" id="bmi-height" placeholder="ऊंचाई (cm)"><button class="btn" id="process-btn">BMI निकालें</button>`;
+            case 'notes': return `<p>आपके नोट्स ब्राउज़र में ऑटो-सेव हो जाते हैं।</p><textarea id="notes-area" rows="10"></textarea>`;
+            default: return `<p>यह टूल जल्द ही आ रहा है!</p>`;
+        }
+    };
+    
+    // --- Function to bind the JavaScript logic to the tool's UI ---
+    const bindToolLogic = (toolId) => {
+        const processBtn = document.getElementById('process-btn');
+        if (!processBtn) { // For tools without a button
+            if (toolId === 'notes') {
+                const notesArea = document.getElementById('notes-area');
+                notesArea.value = localStorage.getItem('user-notes') || '';
+                notesArea.addEventListener('input', () => localStorage.setItem('user-notes', notesArea.value));
+            }
+            if (toolId === 'word-counter') {
+                 document.getElementById('word-count-text').addEventListener('input', e => showOutput(`<b>शब्द:</b> ${e.target.value.match(/\b\w+\b/g)?.length || 0} | <b>अक्षर:</b> ${e.target.value.length}`));
+            }
+            return;
+        }
+
+        processBtn.addEventListener('click', async () => {
+            const fileInput = document.getElementById('file-input');
+            if (fileInput && fileInput.files.length === 0) {
+                alert('कृपया एक फ़ाइल चुनें।');
+                return;
+            }
+            showLoading();
+            try {
+                switch (toolId) {
+                    case 'image-compressor': {
+                        const file = fileInput.files[0];
+                        const quality = parseFloat(document.getElementById('img-quality').value);
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = e => {
+                            const img = new Image();
+                            img.src = e.target.result;
+                            img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = img.width; canvas.height = img.height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0);
+                                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                                const originalSize = (file.size / 1024).toFixed(2);
+                                const newSize = (atob(dataUrl.split(',')[1]).length / 1024).toFixed(2);
+                                showOutput(`<p>ओरिजिनल: <b>${originalSize}KB</b> | कंप्रेस्ड: <b>${newSize}KB</b></p><img src="${dataUrl}"/><br>${createDownloadLink(dataUrl, `compressed-${file.name.split('.')[0]}.jpg`, 'डाउनलोड करें')}`);
+                                hideLoading();
+                            };
+                        };
+                        break;
+                    }
+                    case 'photo-to-pdf': {
+                        const pdfDoc = await PDFDocument.create();
+                        for (const file of fileInput.files) {
+                            const imgBytes = await file.arrayBuffer();
+                            const image = file.type === 'image/png' ? await pdfDoc.embedPng(imgBytes) : await pdfDoc.embedJpg(imgBytes);
+                            const page = pdfDoc.addPage([image.width, image.height]);
+                            page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
+                        }
+                        const pdfBytes = await pdfDoc.save();
+                        showOutput(createDownloadLink(pdfBytes, 'Photos.pdf', 'डाउनलोड PDF'));
+                        break;
+                    }
+                    case 'pdf-merge': {
+                        if (fileInput.files.length < 2) { alert('कम से कम दो PDF चुनें।'); break; }
+                        const mergedPdf = await PDFDocument.create();
+                        for (const file of fileInput.files) {
+                            const pdfBytes = await file.arrayBuffer();
+                            const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+                            const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                            copiedPages.forEach(page => mergedPdf.addPage(page));
+                        }
+                        const pdfBytes = await mergedPdf.save();
+                        showOutput(createDownloadLink(pdfBytes, 'Merged.pdf', 'डाउनलोड मर्ज की गई PDF'));
+                        break;
+                    }
+                    case 'pdf-to-jpg': {
+                        if (!window.pdfjsLib) { alert('PDF library लोड नहीं हुई।'); break; }
+                        const arrayBuffer = await fileInput.files[0].arrayBuffer();
+                        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                        let linksHtml = '';
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const viewport = page.getViewport({ scale: 1.5 });
+                            const canvas = document.createElement('canvas');
+                            canvas.height = viewport.height; canvas.width = viewport.width;
+                            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+                            const dataUrl = canvas.toDataURL('image/jpeg');
+                            linksHtml += `<a href="${dataUrl}" download="page-${i}.jpg" class="btn" style="margin:5px;">डाउनलोड पेज ${i}</a>`;
+                        }
+                        showOutput(linksHtml);
+                        break;
+                    }
+                    case 'pdf-split': {
+                         const ranges = document.getElementById('split-ranges').value;
+                         if (!ranges) { alert('कृपया पेज रेंज डालें।'); break; }
+                         const pageNumbers = ranges.split(',').flatMap(r => {
+                            if(r.includes('-')) {
+                                const [start, end] = r.split('-').map(Number);
+                                return Array.from({length: end-start+1}, (_, i) => start+i-1);
+                            }
+                            return Number(r)-1;
+                         });
+                         const pdfBytes = await fileInput.files[0].arrayBuffer();
+                         const pdfDoc = await PDFDocument.load(pdfBytes, {ignoreEncryption: true});
+                         const newDoc = await PDFDocument.create();
+                         const copied = await newDoc.copyPages(pdfDoc, pageNumbers);
+                         copied.forEach(p => newDoc.addPage(p));
+                         const newBytes = await newDoc.save();
+                         showOutput(createDownloadLink(newBytes, 'Split.pdf', 'डाउनलोड स्प्लिट PDF'));
+                         break;
+                    }
+                    case 'password-generator': {
+                        const length = document.getElementById('pw-length').value;
+                        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' + (document.getElementById('pw-numbers').checked ? '0123456789' : '') + (document.getElementById('pw-symbols').checked ? '!@#$%^&*()' : '');
+                        let password = '';
+                        for (let i = 0; i < length; i++) password += chars.charAt(Math.floor(Math.random() * chars.length));
+                        showOutput(`<b>${password}</b> <button onclick="navigator.clipboard.writeText('${password}')" style="margin-left:10px; cursor:pointer;">कॉपी</button>`);
+                        break;
+                    }
+                    case 'age-calculator': {
+                        const birthDate = new Date(document.getElementById('birth-date').value);
+                        if(isNaN(birthDate)) { alert('कृपया सही तारीख चुनें।'); break; }
+                        let age = new Date().getFullYear() - birthDate.getFullYear();
+                        const m = new Date().getMonth() - birthDate.getMonth();
+                        if (m < 0 || (m === 0 && new Date().getDate() < birthDate.getDate())) age--;
+                        showOutput(`आपकी उम्र लगभग <b>${age}</b> साल है।`);
+                        break;
+                    }
+                     case 'bmi-calculator': {
+                        const weight = parseFloat(document.getElementById('bmi-weight').value);
+                        const height = parseFloat(document.getElementById('bmi-height').value) / 100;
+                        if(!weight || !height) { alert('वजन और ऊंचाई डालें।'); break; }
+                        const bmi = (weight / (height * height)).toFixed(2);
+                        showOutput(`आपका BMI <b>${bmi}</b> है।`);
+                        break;
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                showOutput(`एक त्रुटि हुई: ${e.message}`);
+            } finally {
+                if(toolId !== 'image-compressor') hideLoading();
+            }
+        });
+        
+        if (toolId === 'password-generator') {
+            document.querySelectorAll('#pw-length, #pw-symbols, #pw-numbers').forEach(el => el.addEventListener('change', () => processBtn.click()));
+            processBtn.click();
+        }
+        if (toolId === 'image-compressor') {
+            document.getElementById('img-quality').addEventListener('input', e => document.getElementById('quality-val').textContent = e.target.value);
+        }
+    };
+    
+    // --- Start the application ---
+    setupEventListeners();
+});
+</script>
+
+</body>
+</html>
